@@ -9,7 +9,6 @@ from convert_to_figure import convert_to_figure
 
 
 blogpost_dir = "blogposts/"
-template_dir = "/templates/"
 
 
 def generate_blog_post(name, config):
@@ -17,7 +16,7 @@ def generate_blog_post(name, config):
 
     # Directories
     post_dir = config["input_dir"] + blogpost_dir
-    templates_dir = config["input_dir"] + template_dir
+    templates_dir = config["templates_loc"]
 
     # Keep track of the files being used to copy later (all posts should have an icon.png)
     used_media = ["icon.png"]

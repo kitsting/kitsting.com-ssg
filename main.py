@@ -15,7 +15,7 @@ root_directory = "C://Users/kitsting/Documents2/WebsiteGenerator"
 def main():
     # Load the config file
     print("Reading config file...")
-    with open(root_directory + "/config.json") as config_read:
+    with open("config.json") as config_read:
         config = json.load(config_read)
     print("Config file loaded!")
 
@@ -53,22 +53,22 @@ def main():
         # Generate the post previews
         post_previews = ""
         for index, name in enumerate(tag_names):
-            post_previews += build_template(config["input_dir"] + "templates/post_preview_template.html",
+            post_previews += build_template(config["templates_loc"] + "post_preview_template.html",
                                             "../" + name[0],
                                             name[1]["post_name"],
                                             name[1]["post_date"])
 
         # Put the previews in the browse page template
-        browse_content = build_template(config["input_dir"] + "templates/browse_page_template.html",
+        browse_content = build_template(config["templates_loc"] + "browse_page_template.html",
                                         tag,
                                         post_previews)
 
         # Put the browse page template in the main content template
-        main_content = build_template(config["input_dir"] + "templates/main_template_no_sidebar.html",
+        main_content = build_template(config["templates_loc"] + "main_template_no_sidebar.html",
                                       browse_content)
 
         # Put the main content template in the base template
-        final_content = build_template(config["input_dir"] + "templates/base_template.html",
+        final_content = build_template(config["templates_loc"] + "base_template.html",
                                        "Posts tagged with '{}'".format(tag),
                                        ("../"*config["default_levels_from_root"])+"favicon.ico",
                                        "../" * config["default_levels_from_root"],
@@ -88,11 +88,11 @@ def main():
             tag_html += "<p><a href={}.html>{} ({} articles)</a><p>".format(tag, tag, len(tag_names))
 
     # Generate browse page
-    browse_root_content = build_template(config["input_dir"] + "templates/browse_root_template.html",
+    browse_root_content = build_template(config["templates_loc"] + "browse_root_template.html",
                                          tag_html)
-    main_content = build_template(config["input_dir"] + "templates/main_template_no_sidebar.html",
+    main_content = build_template(config["templates_loc"] + "main_template_no_sidebar.html",
                                   browse_root_content)
-    final_content = build_template(config["input_dir"] + "templates/base_template.html",
+    final_content = build_template(config["templates_loc"] + "base_template.html",
                                    "Browsing all tags",
                                    ("../" * config["default_levels_from_root"]) + "favicon.ico",
                                    "../" * config["default_levels_from_root"],
@@ -111,21 +111,21 @@ def main():
     # Generate the post previews
     post_previews = ""
     for index, name in enumerate(tag_names):
-        post_previews += build_template(config["input_dir"] + "templates/post_preview_template.html",
+        post_previews += build_template(config["templates_loc"] + "post_preview_template.html",
                                         name[0],
                                         name[1]["post_name"],
                                         name[1]["post_date"])
 
     # Put the previews in the browse page template
-    browse_content = build_template(config["input_dir"] + "templates/blog_index_template.html",
+    browse_content = build_template(config["templates_loc"] + "blog_index_template.html",
                                     post_previews)
 
     # Put the browse page template in the main content template
-    main_content = build_template(config["input_dir"] + "templates/main_template_no_sidebar.html",
+    main_content = build_template(config["templates_loc"] + "main_template_no_sidebar.html",
                                   browse_content)
 
     # Put the main content template in the base template
-    final_content = build_template(config["input_dir"] + "templates/base_template.html",
+    final_content = build_template(config["templates_loc"] + "base_template.html",
                                    "Kitsting's Little Blog",
                                    ("../" * (config["default_levels_from_root"]-1)) + "favicon.ico",
                                    "../" * (config["default_levels_from_root"]-1),
