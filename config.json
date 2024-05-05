@@ -2,5 +2,6 @@
 	"default_levels_from_root" : 2,
 	"output_dir" : "C://Users/kitsting/Documents2/WebsiteGenerator/out/",
 	"input_dir" : "C://Users/kitsting/Documents2/WebsiteGenerator/",
-	"templates_loc" : "templates/"
+	"templates_loc" : "templates/",
+	"components_loc" : "components/"
 }

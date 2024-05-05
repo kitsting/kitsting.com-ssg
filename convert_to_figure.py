@@ -1,51 +1,31 @@
 import os.path
 
-# Priority for finding files to reference. Ideally uses the one with the lowest file size first
-img_ext_priority = ["webp", "jpg", "png"]
-audio_ext_priority = ["mp3"]
-
-# Long HTML code is defined here, so it's not cluttering up code elsewhere
-html_audiofile = ("<audio controls>"
-                  "     <source src=\"{}\" type=\"audio/mpeg\">This browser can't play this audio :("
-                  "</audio>")
-
 
 # Takes an array of parameters as well as a path for media (images, etc) and returns a figure in the right format
-def convert_to_figure(figure_params, media_path):
+def convert_to_figure(figure_params, components_path, media_path):
+    print("figure...")
     files_used = []  # Keeps track of all the files that are referenced
-    param_middle = ""  # Keeps track of the params used so far
 
-    # Iterate through the parameters
-    for index, param in enumerate(figure_params):
-        match param:
-            case "img":  # Image File
-                if param != figure_params[-1]:
-                    for ext in img_ext_priority:
-                        filepath = media_path + figure_params[index + 1] + "." + ext
-                        if os.path.isfile(filepath):
-                            file_used = figure_params[index + 1] + "." + ext
-                            param_middle += "<img src=\"{}\" class=\"post_img\"/>".format(file_used)
-                            files_used.append(file_used)
-                            break
+    print(components_path + figure_params[0] + ".html")
+    if os.path.isfile(components_path + figure_params[0] + ".html"):
+        print("is valid...")
 
-            case "audio":  # Audio File
-                if param != figure_params[-1]:
-                    for ext in audio_ext_priority:
-                        filepath = media_path + figure_params[index + 1] + "." + ext
-                        if os.path.isfile(filepath):
-                            file_used = figure_params[index + 1] + "." + ext
-                            param_middle += html_audiofile.format(file_used)
-                            files_used.append(file_used)
-                            break
+        with open(components_path + figure_params[0] + ".html") as compo_file:
+            component_text = compo_file.read()
 
-            case "autosize":  # Set the height of the media to 350px (should be used directly after a filename)
-                param_middle = param_middle.replace("/>", " height=\"350px\"/>", 1)
+        # Iterate through the parameters
+        for index, param in enumerate(figure_params[1:]):
+            print("check "+param)
 
-            case "caption":  # Set a caption for the figure
-                if param != figure_params[-1]:
-                    param_middle += "<figcaption>{}</figcaption>".format(figure_params[index + 1])
+            if os.path.isfile(media_path + param):
+                component_text = component_text.replace("{{"+str(index)+"}}", param)
+                files_used.append(param)
 
-    # Return the figure in the proper format, as well as a list of the paths of the files the figure references
-    return "<figure class = \"post_figure\">{}</figure>".format(param_middle), files_used
+            else:
+                component_text = component_text.replace("{{"+str(index)+"}}", param)
+
+        return component_text, files_used
+    else:
+        return "", []
 
 

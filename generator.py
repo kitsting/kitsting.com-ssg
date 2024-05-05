@@ -35,15 +35,15 @@ def generate_blog_post(name, config):
     # Convert the placeholder figures to actual figures
     print("(", name, ") Converting figures...")
     figure_end = 0
-    for i in range(0, content_html.count("{figure")):
-        figure_start = content_html.find("{figure", figure_end)
-        figure_end = content_html.find("}", figure_start)
-        figure_params = shlex.split(content_html[figure_start:figure_end])
-        figure, files = convert_to_figure(figure_params, post_dir + name + "_media/")
+    while content_html.count("{{") != 0:
+        figure_start = content_html.find("{{", figure_end)
+        figure_end = content_html.find("}}", figure_start)
+        figure_params = shlex.split(content_html[figure_start+2:figure_end])
+        figure, files = convert_to_figure(figure_params, config["components_loc"], post_dir + name + "_media/")
         for file in files:
             used_media.append(file)
 
-        content_html = content_html.replace(content_html[figure_start:figure_end + 1], figure, 1)
+        content_html = content_html.replace(content_html[figure_start:figure_end+2], figure, 1)
 
     # Read the markdown from the sidebar file (if applicable)
     if using_sidebar:
