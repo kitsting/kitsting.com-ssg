@@ -33,7 +33,7 @@ def generate_blog_post(name, config):
         content_html = markdown.markdown(readfile.read())
 
     # Convert the placeholder figures to actual figures
-    print("(", name, ") Converting figures...")
+    print("(", name, ") Converting components...")
     figure_end = 0
     while content_html.count("{{") != 0:
         figure_start = content_html.find("{{", figure_end)
