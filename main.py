@@ -65,7 +65,7 @@ def main():
         for _, name in enumerate(tag_names):
             print(name)
             post_previews += build_template(config["templates_loc"] + "post_preview_template.html",
-                                            "../../" + name[0],
+                                            "../"*config["browse_dir"].count("/") + name[0],
                                             name[1]["post_name"],
                                             name[1]["post_date"])
 
@@ -81,20 +81,20 @@ def main():
         # Put the main content template in the base template
         final_content = build_template(config["templates_loc"] + "base_template.html",
                                        "Posts tagged with '{}'".format(tag),
-                                       ("../"*config["default_levels_from_root"])+"favicon.ico",
-                                       "../" * config["default_levels_from_root"],
+                                       ("../"*config["browse_dir"].count("/"))+"favicon.ico",
+                                       "../"*config["browse_dir"].count("/"),
                                        "../background.png",
                                        main_content)
 
         # Write out
-        if not os.path.isdir(config["output_dir"] + "blog/browse"):  # Make the appropriate folder if it doesn't exist already
-            os.mkdir(config["output_dir"] + "blog/browse")
-        with open(config["output_dir"] + "blog/browse/" + tag + ".html", 'w') as write_out:
+        if not os.path.isdir(config["output_dir"] + config["browse_dir"]): # Make the appropriate folder if it doesn't exist already
+            os.makedirs(config["output_dir"] + config["browse_dir"], exist_ok=True)
+        with open(config["output_dir"] + config["browse_dir"] + tag + ".html", 'w') as write_out:
             write_out.write(final_content)
 
         print("Generated browse page for", tag)
 
-        # Get the count of articles with a tag for the main browse page
+        # Get the count of articles with a tag to show on the main browse page
         if len(tag_names) == 1:
             tag_html += "<p><a href={}.html>{} ({} article)</a><p>".format(tag, tag, len(tag_names))
         else:
@@ -111,13 +111,13 @@ def main():
                                   browse_root_content)
     final_content = build_template(config["templates_loc"] + "base_template.html",
                                    "Browsing all tags",
-                                   ("../" * config["default_levels_from_root"]) + "favicon.ico",
-                                   "../" * config["default_levels_from_root"],
+                                   ("../"*config["browse_dir"].count("/")) + "favicon.ico",
+                                   "../"*config["browse_dir"].count("/"),
                                    "../background.png",
                                    main_content)
-    if not os.path.isdir(config["output_dir"] + "blog/browse"):  # Make the appropriate folder if it doesn't exist already
-        os.mkdir(config["output_dir"] + "blog/browse")
-    with open(config["output_dir"] + "blog/browse/index.html", 'w') as write_out:
+    if not os.path.isdir(config["output_dir"] + config["browse_dir"]):  # Make the appropriate folder if it doesn't exist already
+        os.mkdir(config["output_dir"] + config["browse_dir"])
+    with open(config["output_dir"] + config["browse_dir"] + "index.html", 'w') as write_out:
         write_out.write(final_content)
         print("Generated 'all tags' page")
 

@@ -2,6 +2,7 @@
 	"default_levels_from_root" : 2,
 	"output_dir" : "out/",
 	"input_dir" : "in/",
+    "browse_dir" : "blog/browse/",
 	"templates_loc" : "templates/",
 	"components_loc" : "components/"
 }
