@@ -8,11 +8,12 @@ import post_scanner
 import generator
 from html_helper import build_template
 
-# Define directories (should probably be in the config file eventually (or just the working directory))
-root_directory = ""
 
 
 def main():
+
+### Initial Load and Checks ###
+
     # Load the config file
     print("Reading config file...")
     with open("config.json") as config_read:
@@ -24,14 +25,14 @@ def main():
         print("No input directory! Stopping...")
         exit
 
-    # Make a copy of the out folder to check for changed files later
-    if not os.path.isdir("out_old"): # Make the appropriate folder if it doesn't exist already
-        os.mkdir("out_old")
-
     # Clear out the output folder if necessary
     if os.path.isdir(config["output_dir"]):
         shutil.rmtree(config["output_dir"], True)
     os.mkdir(config["output_dir"])
+
+
+### Generate the blogposts themselves ###
+
 
     # Scan for posts
     print("Scanning for posts...")
@@ -44,6 +45,10 @@ def main():
             print("Content file " + config["input_dir"] + name + "index.md not found, skipping...")
             break
         generator.generate_blog_post(name, config)
+
+
+### Scan for tags and generate the browse pages ###
+
 
     # Scan for tags
     print("Scanning for tags...")
@@ -88,10 +93,16 @@ def main():
             write_out.write(final_content)
 
         print("Generated browse page for", tag)
+
+        # Get the count of articles with a tag for the main browse page
         if len(tag_names) == 1:
             tag_html += "<p><a href={}.html>{} ({} article)</a><p>".format(tag, tag, len(tag_names))
         else:
             tag_html += "<p><a href={}.html>{} ({} articles)</a><p>".format(tag, tag, len(tag_names))
+
+
+### Generate main browse page ###
+
 
     # Generate browse page
     browse_root_content = build_template(config["templates_loc"] + "browse_root_template.html",
@@ -109,6 +120,11 @@ def main():
     with open(config["output_dir"] + "blog/browse/index.html", 'w') as write_out:
         write_out.write(final_content)
         print("Generated 'all tags' page")
+
+
+
+### Populate other HTML pages ###
+
 
     # Generate the main page
     # Get all posts with the tag
@@ -138,10 +154,19 @@ def main():
                                    "background.png",
                                    main_content)
     # Write out
-    if not os.path.isdir(config["output_dir"] + "blog"):  # Make the appropriate folder if it doesn't exist already
+    if not os.path.isdir(config["output_dir"] + "blog"): # Make the appropriate folder if it doesn't exist already
         os.mkdir(config["output_dir"] + "blog")
     with open(config["output_dir"] + "blog/index.html", 'w') as write_out:
         write_out.write(final_content)
+
+
+
+
+### Check for changed files ###
+
+    # Make a copy of the out folder to check for changed files later
+    if not os.path.isdir("out_old"): # Make the appropriate folder if it doesn't exist already
+        os.mkdir("out_old")
 
     # Check for new and changed files
     old_path = pathlib.Path("out_old")
@@ -150,9 +175,9 @@ def main():
     print("Scanning for new and changed files...")
     changed_files = []
     for outfile in out_path.rglob("*"):
-        outfile_name = str(outfile)[len(root_directory) + 4:]
+        outfile_name = str(outfile)[len(config["output_dir"]):]
         for oldfile in old_path.rglob("*"):
-            oldfile_name = str(oldfile)[len(root_directory)+8:]
+            oldfile_name = str(oldfile)[len("out_old/"):]
             if oldfile_name == outfile_name and oldfile_name.find(".") != -1:
                 if not filecmp.cmp(str(oldfile), str(outfile), False):
                     changed_files.append(str(outfile))
