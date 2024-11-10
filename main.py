@@ -25,8 +25,8 @@ def main():
         exit
 
     # Make a copy of the out folder to check for changed files later
-    if not os.path.isdir(config["input_dir"] + "out_old"): # Make the appropriate folder if it doesn't exist already
-        os.mkdir(config["input_dir"] + "out_old")
+    if not os.path.isdir("out_old"): # Make the appropriate folder if it doesn't exist already
+        os.mkdir("out_old")
 
     # Clear out the output folder if necessary
     if os.path.isdir(config["output_dir"]):
@@ -144,7 +144,7 @@ def main():
         write_out.write(final_content)
 
     # Check for new and changed files
-    old_path = pathlib.Path(config["input_dir"] + "out_old/")
+    old_path = pathlib.Path("out_old")
     out_path = pathlib.Path(config["output_dir"])
 
     print("Scanning for new and changed files...")
@@ -158,12 +158,12 @@ def main():
                     changed_files.append(str(outfile))
                     print("Changed file:", str(outfile))
 
-        if (not os.path.isfile(config["input_dir"] + "out_old/" + outfile_name)) and outfile_name.find(".") != -1:
+        if (not os.path.isfile("out_old/" + outfile_name)) and outfile_name.find(".") != -1:
             changed_files.append(str(outfile))
             print("New file:", str(outfile))
 
-    shutil.rmtree(config["input_dir"] + "out_old", True)
-    shutil.copytree(config["output_dir"], config["input_dir"] + "out_old")
+    shutil.rmtree("out_old", True)
+    shutil.copytree(config["output_dir"], "out_old")
 
     print("Files to be uploaded:\n", changed_files)
 
