@@ -9,7 +9,7 @@ import generator
 from html_helper import build_template
 
 # Define directories (should probably be in the config file eventually (or just the working directory))
-root_directory = "C://Users/kitsting/Documents2/WebsiteGenerator"
+root_directory = ""
 
 
 def main():
@@ -18,6 +18,10 @@ def main():
     with open("config.json") as config_read:
         config = json.load(config_read)
     print("Config file loaded!")
+
+    if not os.path.isdir(config["input_dir"]):
+        print("No input directory! Stopping...")
+        exit
 
     # Make a copy of the out folder to check for changed files later
     if not os.path.isdir(config["input_dir"] + "out_old"):  # Make the appropriate folder if it doesn't exist already
@@ -30,25 +34,25 @@ def main():
 
     # Scan for posts
     print("Scanning for posts...")
-    post_names = post_scanner.get_all_post_names(root_directory + "/blogposts/")
+    post_names = post_scanner.get_all_post_names(config["input_dir"])
 
     # Generate posts
     for name in post_names:
         # Check to make sure a content file exists
-        if not os.path.isfile(config["input_dir"] + "blogposts/" + name + "_content.md"):
-            print("Content file not found for ", name, ", skipping...")
+        if not os.path.isfile(config["input_dir"] + name + "index.md"):
+            print("Content file " + config["input_dir"] + name + "index.md not found, skipping...")
             break
         generator.generate_blog_post(name, config)
 
     # Scan for tags
     print("Scanning for tags...")
-    taglist = post_scanner.get_list_of_tags(config["input_dir"] + "blogposts/")
+    taglist = post_scanner.get_list_of_tags(config["input_dir"])
     print("Finished scanning")
 
     tag_html = ""
     for tag in taglist:
         # Get all posts with the tag
-        tag_names = post_scanner.get_all_posts_with_tag(config["input_dir"] + "blogposts/", tag)
+        tag_names = post_scanner.get_all_posts_with_tag(config["input_dir"], tag)
 
         # Generate the post previews
         post_previews = ""
@@ -106,7 +110,7 @@ def main():
 
     # Generate the main page
     # Get all posts with the tag
-    tag_names = post_scanner.get_all_posts_with_tag(config["input_dir"] + "blogposts/", "blogpost")
+    tag_names = post_scanner.get_all_posts_with_tag(config["input_dir"], "blogpost")
 
     # Generate the post previews
     post_previews = ""

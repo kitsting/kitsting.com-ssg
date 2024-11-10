@@ -8,28 +8,28 @@ from html_helper import build_template
 from convert_to_figure import convert_to_figure
 
 
-blogpost_dir = "blogposts/"
+blogpost_dir = "in/"
 
 
 def generate_blog_post(name, config):
     print("(", name, ") Generating page...")
 
     # Directories
-    post_dir = config["input_dir"] + blogpost_dir
+    post_dir = config["input_dir"]
     templates_dir = config["templates_loc"]
 
     # Keep track of the files being used to copy later (all posts should have an icon.png)
     used_media = ["icon.png"]
 
     # Read json and get data
-    with open(post_dir + name + "_meta.json") as article_metadata:
+    with open(post_dir + name + "meta.json") as article_metadata:
         article_info = json.load(article_metadata)
 
     # Determine if a sidebar file exists
-    using_sidebar = os.path.isfile(post_dir + name + "_sidebar.md")
+    using_sidebar = os.path.isfile(post_dir + name + "sidebar.md")
 
     # Read the markdown from the content file
-    with open(post_dir + name + "_content.md", 'r') as readfile:
+    with open(post_dir + name + "index.md", 'r') as readfile:
         content_html = markdown.markdown(readfile.read())
 
     # Convert the placeholder figures to actual figures
@@ -39,7 +39,7 @@ def generate_blog_post(name, config):
         figure_start = content_html.find("{{", figure_end)
         figure_end = content_html.find("}}", figure_start)
         figure_params = shlex.split(content_html[figure_start+2:figure_end])
-        figure, files = convert_to_figure(figure_params, config["components_loc"], post_dir + name + "_media/")
+        figure, files = convert_to_figure(figure_params, config["components_loc"], post_dir + name + "/")
         for file in files:
             used_media.append(file)
 
@@ -47,7 +47,7 @@ def generate_blog_post(name, config):
 
     # Read the markdown from the sidebar file (if applicable)
     if using_sidebar:
-        with open(post_dir + name + "_sidebar.md", 'r') as readfile:
+        with open(post_dir + name + "sidebar.md", 'r') as readfile:
             sidebar_html = markdown.markdown(readfile.read())
 
     # Write the finished thing to the out folder
@@ -55,8 +55,8 @@ def generate_blog_post(name, config):
     if not os.path.isdir(config["output_dir"] + "blog"):  # Make the appropriate folder if it doesn't exist already
         os.mkdir(config["output_dir"] + "blog")
 
-    if not os.path.isdir(config["output_dir"] + "blog/" + name):  # Make the appropriate folder if it doesn't exist already
-        os.mkdir(config["output_dir"] + "blog/" + name)
+    if not os.path.isdir(config["output_dir"] + name):  # Make the appropriate folder if it doesn't exist already
+        os.mkdir(config["output_dir"] + name)
 
     # Lowest Level (blog info and content)
     tags = ""
@@ -82,14 +82,14 @@ def generate_blog_post(name, config):
     levels_deep = "../" * config["default_levels_from_root"]
 
     # Check automagically if a favicon file exists
-    if os.path.isfile(post_dir + name + "_media/favicon.ico"):
+    if os.path.isfile(post_dir + name + "/favicon.ico"):
         favicon = "favicon.ico"
         used_media.append("favicon.ico")
     else:
         favicon = levels_deep + "favicon.ico"  # Use the favicon at the site root if none exists
 
     # Check automagically if a background file exists
-    if os.path.isfile(post_dir + name + "_media/background.png"):
+    if os.path.isfile(post_dir + name + "/background.png"):
         background = "background.png"
         used_media.append("background.png")
     else:
@@ -104,11 +104,11 @@ def generate_blog_post(name, config):
                                    page_content)
 
     # Write out
-    with open(config["output_dir"] + "blog/" + name + "/index.html", 'w') as write_out:
+    with open(config["output_dir"] + name + "index.html", 'w') as write_out:
         write_out.write(final_content)
 
     # Copy files
     for file in used_media:
-        shutil.copy2(post_dir + name + "_media/" + file, config["output_dir"] + "blog/" + name + "/")
+        shutil.copy2(post_dir + name + file, config["output_dir"] + name)
 
     print("(", name, ") Page Generated!! :>")
