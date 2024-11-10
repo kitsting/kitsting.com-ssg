@@ -19,12 +19,13 @@ def main():
         config = json.load(config_read)
     print("Config file loaded!")
 
+    #Don't proceed if there is no input directory
     if not os.path.isdir(config["input_dir"]):
         print("No input directory! Stopping...")
         exit
 
     # Make a copy of the out folder to check for changed files later
-    if not os.path.isdir(config["input_dir"] + "out_old"):  # Make the appropriate folder if it doesn't exist already
+    if not os.path.isdir(config["input_dir"] + "out_old"): # Make the appropriate folder if it doesn't exist already
         os.mkdir(config["input_dir"] + "out_old")
 
     # Clear out the output folder if necessary
@@ -56,9 +57,10 @@ def main():
 
         # Generate the post previews
         post_previews = ""
-        for index, name in enumerate(tag_names):
+        for _, name in enumerate(tag_names):
+            print(name)
             post_previews += build_template(config["templates_loc"] + "post_preview_template.html",
-                                            "../" + name[0],
+                                            "../../" + name[0],
                                             name[1]["post_name"],
                                             name[1]["post_date"])
 
@@ -114,7 +116,7 @@ def main():
 
     # Generate the post previews
     post_previews = ""
-    for index, name in enumerate(tag_names):
+    for _, name in enumerate(tag_names):
         post_previews += build_template(config["templates_loc"] + "post_preview_template.html",
                                         name[0],
                                         name[1]["post_name"],

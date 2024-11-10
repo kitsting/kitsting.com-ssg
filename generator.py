@@ -52,11 +52,10 @@ def generate_blog_post(name, config):
 
     # Write the finished thing to the out folder
     print("(", name, ") Writing out...")
-    if not os.path.isdir(config["output_dir"] + "blog"):  # Make the appropriate folder if it doesn't exist already
-        os.mkdir(config["output_dir"] + "blog")
 
-    if not os.path.isdir(config["output_dir"] + name):  # Make the appropriate folder if it doesn't exist already
-        os.mkdir(config["output_dir"] + name)
+    # Make the appropriate folder if it doesn't exist already
+    if not os.path.isdir(config["output_dir"] + name):
+        os.makedirs(config["output_dir"] + name, exist_ok=True)
 
     # Lowest Level (blog info and content)
     tags = ""
