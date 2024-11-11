@@ -24,6 +24,21 @@ def get_all_post_names(directory):
     return return_names
 
 
+def get_all_html_files(directory):
+    return_names = []
+
+    # Scan for files
+    for entry in scantree(directory):
+        if entry.name.find("EXAMPLE") == -1:  # Don't scan example files
+            if entry.name.find(".html") != -1:
+                return_names.append(entry.path[entry.path.find(directory)+len(directory):])
+                print("Found ", entry.path)
+
+    print(return_names)
+    return return_names
+
+
+
 def get_list_of_tags(directory):
     return_tags = []
 

@@ -3,6 +3,7 @@ import os
 import shutil
 import filecmp
 import pathlib
+import shlex
 
 import post_scanner
 import generator
@@ -126,38 +127,44 @@ def main():
 ### Populate other HTML pages ###
 
 
-    # Generate the main page
-    # Get all posts with the tag
-    tag_names = post_scanner.get_all_posts_with_tag(config["input_dir"], "blogpost")
+    # Get HTML pages that need to be updated
+    html_pages = post_scanner.get_all_html_files(config["input_dir"])
 
-    # Generate the post previews
-    post_previews = ""
-    for _, name in enumerate(tag_names):
-        post_previews += build_template(config["templates_loc"] + "post_preview_template.html",
-                                        name[0],
-                                        name[1]["post_name"],
-                                        name[1]["post_date"])
+    for page in html_pages:
+        content_html = open(config["input_dir"]+page).read()
+        figure_end = 0
+        figure_count = content_html.count("{{")
+        for idx in range(figure_count):
+            print("scan component")
+            figure_start = content_html.find("{{", figure_end)
+            figure_end = content_html.find("}}", figure_start)
+            figure = content_html[figure_start:figure_end+2]
+            print(figure)
+            figure_params = shlex.split(content_html[figure_start+2:figure_end])
+            print(figure_params)
 
-    # Put the previews in the browse page template
-    browse_content = build_template(config["templates_loc"] + "blog_index_template.html",
-                                    post_previews)
+            if figure_params[0] == "tag":
+                if len(figure_params) > 2:
+                    tag_names = post_scanner.get_all_posts_with_tag(config["input_dir"], figure_params[1], figure_params[2])
+                else:
+                    tag_names = post_scanner.get_all_posts_with_tag(config["input_dir"], figure_params[1])
 
-    # Put the browse page template in the main content template
-    main_content = build_template(config["templates_loc"] + "main_template_no_sidebar.html",
-                                  browse_content)
+                # Generate the post previews
+                post_previews = ""
+                for _, name in enumerate(tag_names):
+                    post_previews += build_template(config["templates_loc"] + "post_preview_template.html",
+                                                    "../"*page.count("/")+name[0],
+                                                    name[1]["post_name"],
+                                                    name[1]["post_date"])
+                    
+                print("replace")
+                content_html = content_html.replace(figure, post_previews)
 
-    # Put the main content template in the base template
-    final_content = build_template(config["templates_loc"] + "base_template.html",
-                                   "Kitsting's Little Blog",
-                                   ("../" * (config["default_levels_from_root"]-1)) + "favicon.ico",
-                                   "../" * (config["default_levels_from_root"]-1),
-                                   "background.png",
-                                   main_content)
-    # Write out
-    if not os.path.isdir(config["output_dir"] + "blog"): # Make the appropriate folder if it doesn't exist already
-        os.mkdir(config["output_dir"] + "blog")
-    with open(config["output_dir"] + "blog/index.html", 'w') as write_out:
-        write_out.write(final_content)
+        # Write out
+        if not os.path.isdir(config["output_dir"] + os.path.dirname(page)): # Make the appropriate folder if it doesn't exist already
+            os.mkdir(config["output_dir"] + os.path.dirname(page))
+        with open(config["output_dir"] + page, 'w') as write_out:
+            write_out.write(content_html)
 
 
 
