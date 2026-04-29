@@ -5,31 +5,24 @@ import shlex
 import markdown
 
 from html_helper import build_template
-from convert_to_figure import convert_to_figure
-
-
-blogpost_dir = "in/"
+from html_helper import convert_to_figure
 
 
 def generate_blog_post(name, config):
     print("(", name, ") Generating page...")
 
-    # Directories
-    post_dir = config["input_dir"]
-    templates_dir = config["templates_loc"]
-
     # Keep track of the files being used to copy later (all posts should have an icon.png)
     used_media = ["icon.png"]
 
     # Read json and get data
-    with open(post_dir + name + "meta.json") as article_metadata:
+    with open(name + "meta.json") as article_metadata:
         article_info = json.load(article_metadata)
 
     # Determine if a sidebar file exists
-    using_sidebar = os.path.isfile(post_dir + name + "sidebar.md")
+    using_sidebar = os.path.isfile(name + "sidebar.md")
 
     # Read the markdown from the content file
-    with open(post_dir + name + "index.md", 'r') as readfile:
+    with open(name + "index.md", 'r') as readfile:
         content_html = markdown.markdown(readfile.read())
 
     # Convert the placeholder figures to actual figures
@@ -39,7 +32,7 @@ def generate_blog_post(name, config):
         figure_start = content_html.find("{{", figure_end)
         figure_end = content_html.find("}}", figure_start)
         figure_params = shlex.split(content_html[figure_start+2:figure_end])
-        figure, files = convert_to_figure(figure_params, config["components_loc"], post_dir + name + "/")
+        figure, files = convert_to_figure(figure_params, "components/", name + "/")
         for file in files:
             used_media.append(file)
 
@@ -47,15 +40,17 @@ def generate_blog_post(name, config):
 
     # Read the markdown from the sidebar file (if applicable)
     if using_sidebar:
-        with open(post_dir + name + "sidebar.md", 'r') as readfile:
+        with open(name + "sidebar.md", 'r') as readfile:
             sidebar_html = markdown.markdown(readfile.read())
 
     # Write the finished thing to the out folder
     print("(", name, ") Writing out...")
 
     # Make the appropriate folder if it doesn't exist already
-    if not os.path.isdir(config["output_dir"] + name):
-        os.makedirs(config["output_dir"] + name, exist_ok=True)
+    out_name = name.replace(config["input_dir"], config["output_dir"])
+
+    if not os.path.isdir(out_name):
+        os.makedirs(out_name, exist_ok=True)
 
     # Lowest Level (blog info and content)
     tags = ""
@@ -63,7 +58,7 @@ def generate_blog_post(name, config):
         tags += "<a href=\"../browse/{}.html\">{}<a>, ".format(tag, tag)
     tags = tags[0:len(tags) - 2]
 
-    main_content = build_template(templates_dir + "blogpost_header.html",
+    main_content = build_template("templates/blogpost_header.html",
                                   article_info["post_name"],
                                   article_info["post_date"],
                                   tags,
@@ -71,43 +66,41 @@ def generate_blog_post(name, config):
 
     # Second Lowest Level (sidebar content (if applicable) and divs)
     if using_sidebar:
-        page_content = build_template(templates_dir + "main_template_sidebar.html",
+        page_content = build_template("templates/main_template_sidebar.html",
                                       sidebar_html,
                                       main_content)
     else:
-        page_content = build_template(templates_dir + "main_template_no_sidebar.html", content_html)
+        page_content = build_template("templates/main_template_no_sidebar.html", content_html)
 
-    # Calculate levels from root
-    levels_deep = "../" * config["default_levels_from_root"]
 
     # Check automagically if a favicon file exists
-    if os.path.isfile(post_dir + name + "/favicon.ico"):
+    if os.path.isfile(name + "/favicon.ico"):
         favicon = "favicon.ico"
         used_media.append("favicon.ico")
     else:
-        favicon = levels_deep + "favicon.ico"  # Use the favicon at the site root if none exists
+        favicon = "/favicon.ico"  # Use the favicon at the site root if none exists
 
     # Check automagically if a background file exists
-    if os.path.isfile(post_dir + name + "/background.png"):
+    if os.path.isfile(name + "/background.png"):
         background = "background.png"
         used_media.append("background.png")
     else:
         background = "../background.png"  # Use the background one level up if no custom background exists
 
     # Highest level (HTML header and navigation bar)
-    final_content = build_template(templates_dir + "base_template.html",
+    final_content = build_template("templates/base_template.html",
                                    article_info["page_title"],
                                    favicon,
-                                   levels_deep,
+                                   "0", #Vestigial levels deep
                                    background,
                                    page_content)
 
     # Write out
-    with open(config["output_dir"] + name + "index.html", 'w') as write_out:
+    with open(out_name + "index.html", 'w') as write_out:
         write_out.write(final_content)
 
     # Copy files
     for file in used_media:
-        shutil.copy2(post_dir + name + file, config["output_dir"] + name)
+        shutil.copy2(name + file, out_name)
 
     print("(", name, ") Page Generated!! :>")
