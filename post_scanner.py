@@ -46,14 +46,13 @@ def get_list_of_tags(directory):
 
     # Scan for files
     for entry in scantree(directory):
-        if entry.name.find("EXAMPLE") == -1:  # Don't scan example files
-            if entry.name.find("meta.json") != -1:
-                with open(entry.path) as post_metadata:
-                    metadata_json = json.load(post_metadata)
-                    for tag in metadata_json["tags"]:
-                        if tag not in return_tags:
-                            return_tags.append(tag)
-                            print("Found tag ", tag, "(", entry.path, ")")
+        if (entry.name.find("EXAMPLE") == -1) and (entry.name.find("meta.json") != -1):  # Don't scan example files
+            with open(entry.path) as post_metadata:
+                metadata_json = json.load(post_metadata)
+                for tag in metadata_json["tags"]:
+                    if tag not in return_tags:
+                        return_tags.append(tag)
+                        print("Found tag ", tag, "(", entry.path, ")")
 
     return return_tags
 

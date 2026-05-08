@@ -1,0 +1,7 @@
+{
+	"output_dir" : "out/",
+	"input_dir" : "in/",
+    "browse_dir" : "blog/browse/",
+	"neocities_user" : "USERNAME",
+	"neocities_pass" : "PASSWORD"
+}

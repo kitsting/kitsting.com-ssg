@@ -1,13 +1,10 @@
 import json
 import os
 import shutil
-import filecmp
-import pathlib
-import shlex
 import argparse
 
 import post_scanner
-import generator
+import html_helper
 from html_helper import build_template
 from html_helper import handle_components
 
@@ -36,7 +33,6 @@ def main():
 
 
     # Parse commandline arguments
-    mode_hard = False
     mode_push = False
 
     parser = argparse.ArgumentParser()
@@ -46,7 +42,6 @@ def main():
     args = parser.parse_args()
 
     if args.rebuild:
-        mode_hard = True
         print("Hard-reset mode is ON")
 
         # Clear the output folder
@@ -72,15 +67,8 @@ def main():
     os.mkdir("temp/")
 
 
-    # Clear out the output folder if necessary
-    if mode_hard:
-        if os.path.isdir(config["output_dir"]):
-            shutil.rmtree(config["output_dir"], True)
-        os.mkdir(config["output_dir"])
-
 
 ### Generate the blogposts themselves ###
-
 
     # Scan for posts
     print("Scanning for posts...")
@@ -92,11 +80,10 @@ def main():
         if not os.path.isfile(name + "index.md"):
             print("Content file " + name + "index.md not found, skipping...")
             break
-        generator.generate_blog_post(name, config)
+        html_helper.generate_blog_post(name, config)
 
 
 ### Scan for tags and generate the browse pages ###
-
 
     # Scan for tags
     print("Scanning for tags...")
@@ -149,7 +136,6 @@ def main():
 
 ### Generate main browse page ###
 
-
     # Generate browse page
     browse_root_content = build_template("templates/browse_root_template.html", tag_html)
 
@@ -171,7 +157,6 @@ def main():
 
 
 ### Populate other HTML pages ###
-
 
     # Get HTML pages that need to be updated
     html_pages = post_scanner.get_all_html_files(config["input_dir"])
@@ -204,8 +189,7 @@ def main():
     if os.path.isdir("temp/"):
         shutil.rmtree("temp/", True)
 
-
-    print("Files to be uploaded:\n", post_scanner.changed_files)
+    print("Files to be pushed:\n", post_scanner.changed_files)
 
     if mode_push:
         #Push to Neocities
