@@ -1,6 +1,11 @@
 import os
 import json
 import datetime
+import shutil
+import filecmp
+
+
+changed_files = []
 
 def scantree(path):
     for entry in os.scandir(path):
@@ -31,7 +36,6 @@ def get_all_html_files(directory):
         if entry.name.find("EXAMPLE") == -1:  # Don't scan example files
             if entry.name.find(".html") != -1:
                 return_names.append(entry.path.replace(directory, ""))
-                print("Found ", entry.path)
 
     return return_names
 
@@ -87,3 +91,32 @@ def scan_for_misc_files(directory, blog_posts):
                 return_names.append(entry.path)
 
     return return_names
+
+
+
+def write_if_not_exists(infile, outfile):
+    if not os.path.isdir(os.path.dirname(outfile)): # Make the appropriate folder if it doesn't exist already
+        os.makedirs(os.path.dirname(outfile), exist_ok=False)
+
+    if not os.path.isfile(outfile):
+        print("New file:", str(outfile))
+        shutil.copy2(infile, outfile)
+        if not outfile in changed_files:
+            changed_files.append(outfile)
+    else:
+        if not filecmp.cmp(str(infile), str(outfile), False):
+            print("Changed file:", str(outfile))
+            shutil.copy2(infile, outfile)
+            if not outfile in changed_files:
+                changed_files.append(outfile)
+
+
+
+def write_temp_html(filepath, content) -> str:
+    if not os.path.isdir("temp/" + os.path.dirname(filepath)):
+        os.makedirs("temp/" + os.path.dirname(filepath), exist_ok=True)
+
+    with open("temp/" + filepath, 'w') as write_out:
+        write_out.write(content)
+
+    return "temp/" + filepath

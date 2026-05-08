@@ -6,6 +6,8 @@ import markdown
 
 from html_helper import build_template
 from html_helper import convert_to_figure
+from post_scanner import write_if_not_exists
+from post_scanner import write_temp_html
 
 
 def generate_blog_post(name, config):
@@ -26,7 +28,7 @@ def generate_blog_post(name, config):
         content_html = markdown.markdown(readfile.read())
 
     # Convert the placeholder figures to actual figures
-    print("(", name, ") Converting components...")
+    print("(", name, ") Found about", content_html.count("{{"), "components")
     figure_end = 0
     while content_html.count("{{") != 0:
         figure_start = content_html.find("{{", figure_end)
@@ -43,14 +45,6 @@ def generate_blog_post(name, config):
         with open(name + "sidebar.md", 'r') as readfile:
             sidebar_html = markdown.markdown(readfile.read())
 
-    # Write the finished thing to the out folder
-    print("(", name, ") Writing out...")
-
-    # Make the appropriate folder if it doesn't exist already
-    out_name = name.replace(config["input_dir"], config["output_dir"])
-
-    if not os.path.isdir(out_name):
-        os.makedirs(out_name, exist_ok=True)
 
     # Lowest Level (blog info and content)
     tags = ""
@@ -96,11 +90,13 @@ def generate_blog_post(name, config):
                                    page_content)
 
     # Write out
-    with open(out_name + "index.html", 'w') as write_out:
-        write_out.write(final_content)
+
+    # Make the appropriate folder if it doesn't exist already
+    out_name = name.replace(config["input_dir"], config["output_dir"])
+    temp_path = write_temp_html(out_name + "index.html", final_content)
+
+    write_if_not_exists(temp_path, out_name + "index.html")
 
     # Copy files
     for file in used_media:
-        shutil.copy2(name + file, out_name)
-
-    print("(", name, ") Page Generated!! :>")
+        write_if_not_exists(name + file, out_name + file)

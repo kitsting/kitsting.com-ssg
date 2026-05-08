@@ -59,7 +59,6 @@ def convert_to_figure(figure_params, components_path, media_path):
 
     # Only use the component if it exists
     if os.path.isfile(components_path + figure_params[0] + ".html"):
-        print("Component found: "+components_path + figure_params[0] + ".html")
 
         # Read the content of the component into memory
         with open(components_path + figure_params[0] + ".html") as compo_file:

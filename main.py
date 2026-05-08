@@ -4,6 +4,7 @@ import shutil
 import filecmp
 import pathlib
 import shlex
+import argparse
 
 import post_scanner
 import generator
@@ -16,6 +17,12 @@ def main():
 
 ### Initial Load and Checks ###
 
+    # Set working directory
+    abspath = os.path.abspath(__file__)
+    dname = os.path.dirname(abspath)
+    os.chdir(dname)
+    print("Working in", dname)
+
     # Load the config file
     print("Reading config file...")
     with open("config.json") as config_read:
@@ -27,10 +34,49 @@ def main():
         print("No input directory! Stopping...")
         exit
 
+
+    # Parse commandline arguments
+    mode_hard = False
+    mode_push = False
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-r", "--rebuild", help="Hard-reset mode, wipes output dir before building", action='store_true')
+    parser.add_argument("-p", "--push", help="Push changed files to Neocities", action='store_true')
+    parser.add_argument("-f", "--flush", help="Forget any previously changed files", action='store_true')
+    args = parser.parse_args()
+
+    if args.rebuild:
+        mode_hard = True
+        print("Hard-reset mode is ON")
+
+        # Clear the output folder
+        if os.path.isdir(config["output_dir"]):
+            shutil.rmtree(config["output_dir"], True)
+        os.mkdir(config["output_dir"])
+
+    if args.push:
+        mode_push = True
+        print("Push mode is ON")
+
+    if not args.flush:
+        # Read any stored changed files from previous executions
+        if os.path.isfile("changed"):
+            print("Loading changed files...")
+            with open("changed", 'r') as file:
+                for line in file:
+                    post_scanner.changed_files.append(line.strip())
+
+
+    if os.path.isdir("temp/"):
+        shutil.rmtree("temp/", True)
+    os.mkdir("temp/")
+
+
     # Clear out the output folder if necessary
-    if os.path.isdir(config["output_dir"]):
-        shutil.rmtree(config["output_dir"], True)
-    os.mkdir(config["output_dir"])
+    if mode_hard:
+        if os.path.isdir(config["output_dir"]):
+            shutil.rmtree(config["output_dir"], True)
+        os.mkdir(config["output_dir"])
 
 
 ### Generate the blogposts themselves ###
@@ -88,12 +134,11 @@ def main():
                                        main_content)
 
         # Write out
-        if not os.path.isdir(config["output_dir"] + config["browse_dir"]): # Make the appropriate folder if it doesn't exist already
-            os.makedirs(config["output_dir"] + config["browse_dir"], exist_ok=True)
-        with open(config["output_dir"] + config["browse_dir"] + tag + ".html", 'w') as write_out:
-            write_out.write(final_content)
+        out_name = config["output_dir"] + config["browse_dir"] + tag + ".html"
+        temp_path = post_scanner.write_temp_html(out_name, final_content)
+        
+        post_scanner.write_if_not_exists(temp_path, out_name)
 
-        print("Generated browse page for", tag)
 
         # Get the count of articles with a tag to show on the main browse page
         if len(tag_names) == 1:
@@ -116,11 +161,12 @@ def main():
                                    "../"*config["browse_dir"].count("/"),
                                    "../background.png",
                                    main_content)
-    if not os.path.isdir(config["output_dir"] + config["browse_dir"]):  # Make the appropriate folder if it doesn't exist already
-        os.mkdir(config["output_dir"] + config["browse_dir"])
-    with open(config["output_dir"] + config["browse_dir"] + "index.html", 'w') as write_out:
-        write_out.write(final_content)
-        print("Generated 'all tags' page")
+
+    # Write out
+    out_name = config["output_dir"] + config["browse_dir"] + "index.html"
+    temp_path = post_scanner.write_temp_html(out_name, final_content)
+    
+    post_scanner.write_if_not_exists(temp_path, out_name)
 
 
 
@@ -137,56 +183,38 @@ def main():
         content_html = handle_components(content_html, config["input_dir"], page)
 
         # Write out
-        if not os.path.isdir(config["output_dir"] + os.path.dirname(page)): # Make the appropriate folder if it doesn't exist already
-            os.makedirs(config["output_dir"] + os.path.dirname(page), exist_ok=False)
-        with open(config["output_dir"] + page, 'w') as write_out:
-            write_out.write(content_html)
+        out_name = config["output_dir"] + page
+        temp_path = post_scanner.write_temp_html(out_name, content_html)
 
-        print("Wrote out " + config["output_dir"] + page + "! :>")
+        post_scanner.write_if_not_exists(temp_path, out_name)
 
 
 
 ### Copy any other files that might be present
 
     files = post_scanner.scan_for_misc_files(config["input_dir"], post_names)
-    print(files)
 
     for file in files:
         outfile = file.replace(config["input_dir"], config["output_dir"])
-        if not os.path.isdir(os.path.dirname(outfile)): # Make the appropriate folder if it doesn't exist already
-            os.makedirs(os.path.dirname(outfile), exist_ok=False)
-        shutil.copy2(file, outfile)
+        post_scanner.write_if_not_exists(file, outfile)
 
 
-### Check for changed files ###
+### Wrap up ###
 
-    # Make a copy of the out folder to check for changed files later
-    if not os.path.isdir("out_old"): # Make the appropriate folder if it doesn't exist already
-        os.mkdir("out_old")
+    if os.path.isdir("temp/"):
+        shutil.rmtree("temp/", True)
 
-    # Check for new and changed files
-    old_path = pathlib.Path("out_old")
-    out_path = pathlib.Path(config["output_dir"])
 
-    print("Scanning for new and changed files...")
-    changed_files = []
-    for outfile in out_path.rglob("*"):
-        outfile_name = str(outfile)[len(config["output_dir"]):]
-        for oldfile in old_path.rglob("*"):
-            oldfile_name = str(oldfile)[len("out_old/"):]
-            if oldfile_name == outfile_name and oldfile_name.find(".") != -1:
-                if not filecmp.cmp(str(oldfile), str(outfile), False):
-                    changed_files.append(str(outfile))
-                    print("Changed file:", str(outfile))
+    print("Files to be uploaded:\n", post_scanner.changed_files)
 
-        if (not os.path.isfile("out_old/" + outfile_name)) and outfile_name.find(".") != -1:
-            changed_files.append(str(outfile))
-            print("New file:", str(outfile))
-
-    shutil.rmtree("out_old", True)
-    shutil.copytree(config["output_dir"], "out_old")
-
-    print("Files to be uploaded:\n", changed_files)
+    if mode_push:
+        #Push to Neocities
+        pass
+    else:
+        #Store the changed files for later
+        with open("changed", "w") as file:
+            for path in post_scanner.changed_files:
+                file.write(path + "\n")
 
 
 if __name__ == "__main__":
