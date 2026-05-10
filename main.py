@@ -3,6 +3,8 @@ import os
 import shutil
 import argparse
 
+import neocities
+
 import post_scanner
 import html_helper
 from html_helper import build_template
@@ -60,6 +62,9 @@ def main():
             with open("changed", 'r') as file:
                 for line in file:
                     post_scanner.changed_files.append(line.strip())
+    else:
+        if os.path.isfile("changed"):
+            os.remove("changed")
 
 
     if os.path.isdir("temp/"):
@@ -192,8 +197,17 @@ def main():
     print("Files to be pushed:\n", post_scanner.changed_files)
 
     if mode_push:
+        nc = neocities.NeoCities(api_key=config["neocities_key"])
+
         #Push to Neocities
-        pass
+        for file in post_scanner.changed_files:
+            outfile = file.replace(config["output_dir"], "")
+            print("Name locally:", file, " | Name on server:", outfile)
+            nc.upload((file, outfile))
+        
+        #Clear stored changed files
+        if os.path.isfile("changed"):
+            os.remove("changed")
     else:
         #Store the changed files for later
         with open("changed", "w") as file:
