@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Badcraft 3D</title>
+	<link rel="icon" type="image/x-icon" href="../../site_images/HomeFavicon.ico">
+	<!-- The style.css file allows you to change the look of your web pages.
+         If you include the next line in all your web pages, they will all share the same look.
+         This makes it easier to make new pages for your site. -->
+	<link href="../../style.css" rel="stylesheet" type="text/css" media="all">
+	<style>
+		html {
+			background-color: #d0a5c0;
+			background: url(background.png);
+			background-size: 500px;
+			background-attachment: fixed;
+		}
+	</style>
+
+
+</head>
+
+<body>
+	{{component nav}}
+
+
+	<main>
+		<div class="main_content">
+			<div class="light_bg">
+				<div class="flex_columns">
+					<div>
+						<h1>Badcraft 3D</h1>
+						<h3>Released: March 11, 2020</h3>
+
+						<p>I thought it would be fun to make a game using Pico-8, since I've seen other games made with
+							it, and it seemed pretty cool. I decided on making a very simple "Minecraft" "clone".</p>
+						<p>You can place blocks (there's around 40 to choose from!) in procedurally generated worlds.
+						</p>
+						<p>The cool thing about Pico-8 is that you can play games made with it in your browser, too!
+							It'll be on your right, or below if you're on mobile. You can play it with the arrow keys,
+							Z, and X. Before you ask, no, you can't save.</p>
+						<p>Pico-8 is surprisingly simple and fun to make games for, so I might make another game with it
+							in the future. I'd also love to make some sort of sequel to this game in Picotron.</p>
+						<br><br>
+
+						<h3>How to play</h3>
+						<p>The game is playable on this page, but you can also <a href="play.html" target="_blank"
+								rel="noopener noreferrer">play in a separate tab instead.</a>
+							<br>Make sure Javascript is enabled!
+						</p>
+
+						<p>You can also <a href="https://kitsting.itch.io/badcraft-3d">get the .png file from
+								itch.io</a> to open in your own copy of Pico-8! It's also playable in-browser there, in
+							case you don't trust me enough to play it here (how could you not ;-; )</p>
+
+						<h3>Controls</h3>
+						<ul>
+							<li>Arrow Keys: Move</li>
+							<li>X: (Press) Navigate hotbar/Cancel | (Hold) Strafe Mode</li>
+							<li>Z: Place Block/Select</li>
+							<li>Enter: Pause</li>
+						</ul>
+					</div>
+					<div>
+						<iframe src="play.html" width="100%" height="512px" allowfullscreen>
+						</iframe>
+
+						<div class="flex" style="width:100%; justify-content: space-evenly; margin: 0px;">
+							<div>
+								<img src="badcraft_forest.png"
+									alt="A screenshot of Badcraft 3D. The player is in a forest." width="100%">
+							</div>
+							<div>
+								<img src="badcraft_structure.png"
+									alt="A screenshot of Badcraft 3D. The player is in some sort of structure, with a fence and a path outside."
+									width="100%">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+</body>

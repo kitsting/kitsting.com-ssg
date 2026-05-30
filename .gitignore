@@ -3,6 +3,7 @@
 /__pycache__/
 /out/
 /changed/
-/in/
+/in/download/
+/in/view/
 /config.json
 config.json

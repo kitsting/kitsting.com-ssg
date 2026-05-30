@@ -1,0 +1,406 @@
+/* This is my terrible CSS. Feel free to take whatever you need :3 */
+/*                                                   - kitsting    */
+   
+   
+/* Variables */
+:root {
+	/* BG colors have transparency, FG colors do not. BG colors might be used in the FG and vice versa */
+	--light-bg-color: #E8D0B5f4;
+	--dark-bg-color: #4f2b24f4;
+	--dark-bg-color-subnav: #331913f9;
+	
+	--light-fg-color: #E0C8AA;
+	--dark-fg-color: #4f2b24;
+
+	--light-fg-color-alt: #b49a7b;
+	--dark-fg-color-alt: #331913;
+
+	
+	--main-content-hover-colour: #ad9578;
+	
+	
+	/* Border radius for EVERYTHING */
+	--corner-radius: 14px;
+	--nav-corner-radius: 14px;
+}
+
+/*-----------------------------------------------------------*/
+
+
+/* Whole Page */
+html {
+	/* This is a fallback background just in case. The actual background for each page is set at the top of the HTML file. */
+	background: url(site_images/NeoBGBlue.png);
+	background-size: 100px;
+	background-repeat: repeat;
+	background-attachment: fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	background-color: var(--dark-bg-color)
+}
+
+main {
+	margin-left: 10%;
+	margin-right: 10%;
+	line-height: 1.5;
+	margin-bottom: 50px;
+}
+
+body {
+	margin-top: 0px;
+}
+
+@media (max-width: 820px) { /* Different rules for mobile devices and smaller screens */
+	body {
+		margin-left: 1%;
+		margin-right: 1%;
+	}
+}
+
+/*---------------------------------------------------------*/
+
+
+/* Navigation Area */
+nav {
+	color: white;
+	font-family: Trebuchet MS;
+	font-size: 20px;
+	
+	/* Padding and margins */
+	padding-top: 4px;
+	padding-bottom: 2px;
+	margin-bottom: 15px;
+	margin-left: 10px;
+	margin-right: 10px;
+	text-align: center;
+	background-color: var(--dark-bg-color);
+	border-radius: var(--nav-corner-radius);
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+}
+
+nav img {
+	margin-left: auto;
+	margin-right: 10px;
+	width: 24px;
+	margin-bottom: -4px;
+}
+
+nav > a, .subnav {
+	display: inline-block;;
+	color: var(--light-fg-color);
+	padding: 16px;
+	padding-bottom: 20px;
+	margin-right: 4px;
+	margin-left: 4px;
+	text-decoration: none;
+	border-radius: var(--nav-corner-radius);
+	height: auto;
+}
+
+nav a:hover, .subnav:hover {
+	background-color: #111111;
+	color: #ffffff;
+}
+
+
+@media (max-width: 820px) { /* Different rules for mobile devices and smaller screens */
+	.topnav {
+		width: 30px;
+		height: 30px;
+		overflow: hidden;
+		color: #FFFFFF00;
+	}
+
+	nav > a:hover {
+	background-color: #111111;
+	color: #ffffff00;
+}
+}
+
+.subnav-content {
+	display: none;
+	position: absolute;
+	background-color: var(--dark-bg-color-subnav);
+	z-index: 1;
+	padding: 6px;
+	border-radius: var(--nav-corner-radius);
+}
+
+.subnav-content a {
+	padding: 2px;
+	float: none;
+	text-align: left;
+	display: block;
+	color: var(--light-fg-color);
+	padding: 10px;
+	padding-bottom: 10px;
+	margin-right: 4px;
+	margin-left: 4px;
+	text-decoration: none;
+	border-radius: var(--nav-corner-radius);
+	height: auto;
+}
+
+.subnav:hover .subnav-content {
+	display: block;
+}
+
+@media (hover: none) {
+    .subnav:hover, .subnav-focus, .subnav:active .subnav-content {
+        display: block;
+    }
+}
+
+
+/*---------------------------------------------------------*/
+
+
+
+/* Main Content */
+main {
+	color: var(--dark-fg-color);
+	font-family: Trebuchet MS;
+	font-size: 17px;
+}
+
+.center_content {	
+	/* Size and position */
+	float: left;
+	width: 76%;
+}
+
+
+.right_content {
+	/* Size and position */
+	float: right;
+	width: 23%;
+}
+
+.full_content {
+	width: 100%
+}
+
+
+footer {
+	float: bottom;
+	height: 32px;
+}
+
+
+@media (max-width: 820px) { /* Different rules for mobile devices and smaller screens */
+	.right_content {
+		float: none;
+		width: auto;
+	}
+	.center_content {
+		float: none;
+		width: auto;
+	}
+}
+
+
+/*---------------------------------------------------------*/
+
+
+
+
+/* Links */
+a:hover {
+    text-decoration: none;
+}
+
+
+
+/* Headers */
+h1 {
+	font-size: 32px;
+	color: var(--light-fg-color);
+	background-color: var(--dark-fg-color);
+    border-radius: var(--corner-radius);
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+h2 {
+	font-size: 26px;
+}
+
+
+/* Table Styling */
+th, td {
+	border-bottom: 1px solid;
+	padding: 4px;
+	padding-right: 8px;
+
+}
+
+th {
+	color: var(--light-fg-color);
+	background-color: var(--dark-fg-color);
+}
+
+table {
+	margin-bottom: 20px;
+}
+
+
+
+/* Links section of the homepage */
+.links {
+	list-style-type: none;
+}
+
+.links li {
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.links a {
+	color: var(--light-fg-color);
+    display: block;
+    padding: 8px;
+	margin-left: -40px;
+    background-color: var(--dark-fg-color);
+    border-radius: var(--corner-radius);
+}
+
+
+/*---------------------------------------------------------*/
+
+
+/* Classes */
+.pixel { /*Apply this class to pixel art to make it scale right */
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.flex_columns_simple {
+	display: flex;
+	gap: 20px;
+}
+
+
+.flex_columns { /* Divide a section into columns */
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+.flex_columns div {
+	width: 45.5%;
+    margin-left: 1%;
+    margin-right: 1%;
+}
+
+@media (max-width: 820px) { /* Different rules for mobile devices and smaller screens */
+	.flex_columns, .flex_columns_simple {
+		display: block;
+	}
+	.flex_columns div {
+		width: 100%
+	}
+
+	table {
+		display: block;
+		overflow: scroll;
+	}
+}
+
+
+.light_bg {
+	background-color: var(--light-bg-color);
+	border-radius: var(--corner-radius);
+	
+	/* Padding and margins */
+	padding: 1%;
+    padding-left: 15px;
+    padding-right: 15px;
+	margin-top: 1%;
+	margin-bottom: 2%;
+}
+
+
+.flex {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.blogpost {
+	width: 29%;
+    margin-left: 1%;
+    margin-right: 1%;
+	text-align: center;
+	border-radius: var(--corner-radius);
+	padding: 1%;
+	color: var(--dark-fg-color);
+	padding-bottom: 0px;
+	text-decoration: none;
+}
+
+.blogpost img {
+	border-radius: var(--corner-radius);
+	width: 94%;
+}
+
+.blogpost:hover {
+	background-color: var(--main-content-hover-colour);
+}
+
+.blogpost p {
+	margin-top: -12px;
+	font-size: 18px;
+	text-decoration: none;
+}
+
+.blogpost h3 {
+	margin-top: -4px;
+	font-size: 22px;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.blogpost h3:hover {
+	text-decoration: underline;
+}
+
+.post_figure {
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+
+.post_img {
+	max-width: 100%;
+	max-height: 400px;
+}
+
+hr {
+    color: var(--dark-fg-color);
+}
+
+figcaption {
+	font-style: italic;
+	font-weight: bold;
+}
+
+@media (max-width: 820px) { /* Different rules for mobile devices and smaller screens */
+	.blogpost {
+		width: 100%;
+	}
+	.game {
+		width: 100%;
+	}
+}
+
+
+
+.videoframe {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+}

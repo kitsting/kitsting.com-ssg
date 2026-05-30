@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Katie's cozy cafe</title>
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
+	<!-- The style.css file allows you to change the look of your web pages.
+         If you include the next line in all your web pages, they will all share the same look.
+         This makes it easier to make new pages for your site. -->
+	<link href="style.css" rel="stylesheet" type="text/css" media="all">
+	<style>
+		html {
+			background-color: #a5b4d0;
+			background: url(site_images/backgrounds/pink.png);
+			background-size: 100px;
+			background-attachment: fixed;
+		}
+	</style>
+
+
+</head>
+
+<body>
+	{{component nav}}
+
+
+	<main>
+
+		<div class="right_content">
+			<div class="light_bg">
+				<h3>Currently thinking about...</h3>
+				<p>the snakes infiltrate</p>
+			</div>
+		</div>
+
+
+		<div class="center_content">
+			<div class="light_bg">
+				<h1>Welcome!</h1>
+
+				<div class="flex_columns_simple">
+					<div>
+						<p>
+							hiii ^^! My name's Katie, and welcome to my safe and cozy lil' corner of the web!!
+							I thought it would be cool to make a website as a fun little side project (social media sucks
+							lol), and seeing other peoples' personal websites has been very inspirational.
+						</p>
+
+						<p>
+							My plan is for this site to act as a sort of hub for whatever I'm doing, keeping everything in
+							one nice place. I also wanna talk about all the things I find interesting!
+							Feel free to explore!
+						</p>
+
+						<p>
+							(Also, just so you know, this site was made with a desktop browser in mind. It still
+							<em>works</em> on mobile, but don't be surprised if there are issues that way.)
+						</p>
+
+						<p>
+							Proudly hosted on <a href = "https://neocities.org">Neocities</a> with absolutely no AI generated content.
+						</p>
+					</div>
+
+					<div>
+						<img src="site_images/HelloChat.gif" style="max-width: 300px; height: auto; object-fit: contain;"
+							alt="A gif of God walking into the room, with the caption 'Hello Chat'">
+					</div>
+				</div>
+
+			</div>
+
+			<div class="light_bg">
+				<h1>Latest "Blog" Posts</h1>
+				<p>These are the most recent posts I've written. You can see more by going to the Blog page in the
+					navbar!</p>
+				<div class="flex">
+					{{tag blogpost 3}}
+				</div>
+			</div>
+
+
+			<div class="flex_columns">
+
+				<div class="light_bg">
+					<h2>To-do</h3>
+						<ul>
+							<li>add some more/newer graphics to the site. this includes redoing the backgrounds</li>
+							<li>improve the mobile experience a bit. or maybe just make it clearer that this site is
+								meant for desktop lol</li>
+						</ul>
+				</div>
+
+				<div class="light_bg">
+					<h2>Links!</h2>
+					<p>
+					<ul class="links">
+						<li><a href="https://www.youtube.com/@kt_kitsting">Youtube (Uploads are rare)</a></li>
+						<li><a href="https://kitsting.itch.io">itch.io (I publish my games here!)</a></li>
+						<li><a href="https://github.com/kitsting/">Github (I put source code here! (for now...))</a></li>
+					</ul>
+					</p>
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="right_content">
+			<div class="light_bg">
+				<h2>Friends</h2>
+				<p><a href="https://aegsphere.neocities.org/">AegSite</a> - Conlangs and super cool photography! There's a new featured photo
+				every month (and it <em>always</em> works on mobile)</p>
+			</div>
+		</div>
+
+		<div class="right_content">
+
+			<div class="light_bg" style="max-height: 600px; overflow: scroll;">
+				<h2>Latest site updates</h2>
+				<h3>May 2026</h3>
+				<p>I've made a ton of changes, mostly to my script that generates pages, so if I want to
+					make changes, it will be much easier for me to do so. I've also made some tweaks
+					to the navigation bar, which now features a submenu! I have not tested how
+					well this works on mobile, yet. In other news:<br>
+					The <a href="/misc/guestbook.html">guestbook</a> has been migrated to this site!<br>
+					I added a page for <a href="/misc/remixes/index.html">Heaven Studio remixes</a>
+				</p>
+
+				<h3>August 2025</h3>
+				<p>I've added a page for <a href="/games/vanadius-anniversary/index.html">Vanadius: Anniversary Edition</a> as well as a <a href="/games/vanadius/downloads.html">
+					Vanadius version archive
+				</a> page. I'm thinking about redesigning this site, so that might happen in the next few months.
+				</p>
+
+				<h3>November 2024</h3>
+				<p>After a pretty long break, I've made a ton of changes! Most notably, the games page has been
+					completely
+					redone! There are individual pages for every game now. There is also more than one blog post now!!
+					I've
+					also made changes to several small things throughout the site :3 <br>
+					I'm gonna try to start working on the site more (real), because I really do like it at this point.
+				</p>
+
+				<h3>Older Updates</h3>
+				<p>Older site updates are kept safe <a href="misc/update_archive.html">here!</a>
+
+			</div>
+		</div>
+
+		<div class="center_content">
+			<p>:3</p>
+		</div>
+
+	</main>
+
+
+</body>
+
+</html>

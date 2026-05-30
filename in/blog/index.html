@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<!--This page is managed by the static site generator. Any edits should be made *there*, not here-->
+
+  <head>
+  
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katie's Little Blog</title>
+	<link rel="icon" type="image/x-icon" href="../favicon.ico">
+    <link href="../style.css" rel="stylesheet" type="text/css" media="all">
+	<style>
+		html {
+			background-color: #d0a5c0;
+			background: url(background.png);
+			background-size: 100px;
+			background-attachment: fixed;
+		}
+	</style>
+    
+    
+  </head>
+  <body>
+	{{component nav}}
+  
+  
+    <main>    
+		<div class = "main_content">
+	<div class = "light_bg">
+		<h1>Blog!</h1>
+  
+<p>
+Welcome to my blog-ish thing! Here I plan to write about what I'm doing (or whatever I find interesting), hopefully in a way others find interesting too!
+</p>
+<p>My goal is to explain things in a way that makes sense to someone with little prior knowledge. For example, I try to write technical things in a way that a non-technical person can understand
+(because, personally, I find technical stuff kinda boring). I'm not entirely sure how well I achieve this goal, but the more i write, the better i get at it, right?</p>
+<p>
+This page contains the latest posts. If you want, you can <a href="browse/blogpost.html">browse all posts</a> or <a href="browse/index.html">browse by tag</a>
+</p>
+
+
+<h2>Latest Posts</h2>
+
+<div class = "flex">
+	{{tag blogpost}}
+</div>
+
+<h2>Planned Posts</h2>
+<ul>
+	<li>My time playing Animal Crossing New Leaf, since there's so much it won't fit in the 3DS post</li>
+	<li>"Making of" pages for all the games I've made</li>
+	<li>My Minecraft world, where I started at the earliest version and slowly updated</li>
+	<li>Cool software I find</li>
+	<li>Switch modding/theming</li>
+	<li>My stupid website SSG</li>
+	<li>Making custom Haven Studio remixes</li>
+	<li>Degoogling and being in control of your own data</li>
+	<li>Preservation of various things, and my backup strategy</li>
+	<li>An expansion on the Linux post that's a bit more "how-to", including how to get into the right mindset</li>
+	<li>How to make your own website</li>
+	<li>How to get started making games</li>
+</ul>
+		<br>
+	</div>
+</div>
+	</main>
+  </body>
