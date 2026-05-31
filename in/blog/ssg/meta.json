@@ -1,0 +1,12 @@
+{
+    "post_name":"My stupit SSG",
+    "post_date":"2026/06/01",
+    "edit_date":"2026/06/01",
+    "page_title":"The snakes infiltrate...",
+    "desc":"This website is actually generated with a small script I wrote. Why would I do this to myself?",
+    "tags" : [
+      "blogpost",
+      "programming",
+      "technical"
+	]
+}

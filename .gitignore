@@ -1,8 +1,9 @@
 /.idea/
+/.vscode/
 /.venv/
 /__pycache__/
 /out/
-/changed/
+/changed
 /in/download/
 /in/view/
 /config.json

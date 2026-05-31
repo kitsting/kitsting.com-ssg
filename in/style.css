@@ -42,8 +42,8 @@ html {
 }
 
 main {
-	margin-left: 10%;
-	margin-right: 10%;
+	margin-left: 15%;
+	margin-right: 15%;
 	line-height: 1.5;
 	margin-bottom: 50px;
 }
@@ -227,6 +227,7 @@ h1 {
 }
 h2 {
 	font-size: 26px;
+	padding-top: 10px;
 }
 
 
@@ -317,8 +318,8 @@ table {
 	
 	/* Padding and margins */
 	padding: 1%;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
 	margin-top: 1%;
 	margin-bottom: 2%;
 }

@@ -139,7 +139,7 @@ def generate_blog_post(name, config):
                                       sidebar_html,
                                       main_content)
     else:
-        page_content = build_template("templates/main_template_no_sidebar.html", content_html)
+        page_content = build_template("templates/main_template_no_sidebar.html", main_content)
 
 
     # Check automagically if a favicon file exists
