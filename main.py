@@ -2,6 +2,8 @@ import json
 import os
 import shutil
 import argparse
+import subprocess
+import time
 
 import neocities
 
@@ -70,6 +72,10 @@ def main():
     if os.path.isdir("temp/"):
         shutil.rmtree("temp/", True)
     os.mkdir("temp/")
+
+
+    ## Before-execution bash scripts
+    subprocess.run(['./tree_script.sh'], timeout=3, check=True)
 
 
 
